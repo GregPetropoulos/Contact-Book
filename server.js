@@ -13,7 +13,7 @@ connectDB();
 
 
 //*MIDDLEWARE
-//replaced body parser
+//  ! replaced body parser
 app.use(express.json({extended:false}))
 
 

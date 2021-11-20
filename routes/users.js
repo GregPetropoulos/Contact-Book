@@ -1,17 +1,25 @@
 const express = require('express');
+
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+//* GRABBING VARIABLE FROM .ENV
+const jwtSecret = process.env.MY_JWT_SECRET;
+
+//*PROTECT GLOBAL VARIABLES
+require('dotenv').config();
 
 const User = require('../models/User');
 
-// @route   POST api/users
-//@desc     Register a new user
-//@access   Public
+//* @route   POST api/users
+//* @desc     Register a new user
+//* @access   Public
 router.post(
   '/',
   [
-    //*validating the form
+    //* validating the form
     check('name', 'Please add name').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check(
@@ -25,7 +33,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    //** de-structured req.body
+    //* de-structured req.body
     const { name, email, password } = req.body;
 
     try {
@@ -41,15 +49,31 @@ router.post(
         email,
         password
       });
-      //** encrypting (hashing) the password before saved to db
+      //* encrypting (hashing) the password before saved to db using bcryptjs
       const salt = await bcrypt.genSalt(10);
 
       user.password = await bcrypt.hash(password, salt);
       await user.save();
-      res.send('User saved')
+
+      //*  payload is the object being sent in the payload
+      const payload = {
+        id: user.id
+      };
+      //* signing the token and passing parameters(payload, jwt secret, option for expiration, callback)
+      jwt.sign(
+        payload,
+        jwtSecret,
+        {
+          expiresIn: 3600000
+        },
+        (err, token) => {
+          if (err) throw err;
+          res.json({token});
+        }
+      );
     } catch (err) {
-        console.error(err.message)
-        res.status(500).send('Server Error')
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
   }
 );
