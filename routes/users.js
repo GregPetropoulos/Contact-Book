@@ -57,7 +57,9 @@ router.post(
 
       //*  payload is the object being sent in the payload
       const payload = {
-        id: user.id
+        user: {
+          id: user.id
+        }
       };
       //* signing the token and passing parameters(payload, jwt secret, option for expiration, callback)
       jwt.sign(
@@ -68,7 +70,7 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
-          res.json({token});
+          res.json({ token });
         }
       );
     } catch (err) {
