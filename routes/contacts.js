@@ -34,13 +34,16 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { name, email, phone, type } = req.body;
+    const { name, email, phone, notes, website, birthday, type } = req.body;
     try {
       const newContact = new Contact({
         name,
         email,
         phone,
         type,
+        notes,
+        website,
+        birthday,
         user: req.user.id
       });
       const contact = await newContact.save();
@@ -55,15 +58,69 @@ router.post(
 //* @route    PUT api/contacts/:id
 //* @desc     Update a contact
 //* @access   Private
-router.put('/:id', (req, res) => {
-  res.send('Update contact');
+router.put('/:id', auth, async (req, res) => {
+  const { name, email, phone, notes, website, birthday, type } = req.body;
+
+  // console.log('hit', contactFields)
+
+  //* Build a contact
+  const contactFields = {};
+  if (name) contactFields.name = name;
+  if (email) contactFields.email = email;
+  if (phone) contactFields.phone = phone;
+  if (notes) contactFields.notes = notes;
+  if (website) contactFields.website = website;
+  if (birthday) contactFields.birthday = birthday;
+  if (type) contactFields.type = type;
+
+
+
+  try {
+    // * id of contact in db matches the params in route
+    let contact = await Contact.findById(req.params.id);
+    if (!contact) return res.status(404).json({ msg: 'Contact not found' });
+
+    // *Make sure user owns the contact and other users can't change each others contacts
+    if (contact.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not Authorized' });
+    }
+//* THE UPDATE
+    contact = await Contact.findByIdAndUpdate(
+      req.params.id,
+
+      // * In mongoDB The $set operator replaces the value of a field with the specified value.
+      { $set: contactFields },
+      { new: true }
+    );
+    res.json(contact);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 //* @route    DELETE api/contacts/:id
 //* @desc     Delete a contact
 //* @access   Private
-router.delete('/:id', (req, res) => {
-  res.send('Delete a contact');
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    //* id of contact in db matches the params in route
+    let contact = await Contact.findById(req.params.id);
+    if (!contact) return res.status(404).json({ msg: 'Contact not found' });
+
+    //* Make sure user owns the contact and other users can't change each others contacts
+    if (contact.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not Authorized' });
+    }
+//* THE DELETE
+ await Contact.findByIdAndRemove(req.params.id);
+
+
+    res.json({msg :'Contact removed'});
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 module.exports = router;

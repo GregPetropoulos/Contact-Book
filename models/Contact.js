@@ -20,6 +20,15 @@ const ContactSchema = mongoose.Schema({
     type: String,
     default: 'personal'
   },
+  notes: {
+    type: String
+  },
+  website: {
+    type: String
+  },
+  birthday: {
+    type: Date,
+  },
   date: {
     type: Date,
     default: Date.now()
