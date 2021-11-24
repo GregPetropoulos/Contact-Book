@@ -50,7 +50,7 @@ const ContactState = (props) => {
   };
   // * pulling out the state dispatch from reducer, state allows to  access anything in the state and dispatch allows to send objects to contactReducer
   const [state, dispatch] = useReducer(contactReducer, initialState);
-};
+
 
 //* Add Contact
 
@@ -73,5 +73,5 @@ return (
     {props.children}
   </ContactContext.Provider>
 );
-
+};
 export default ContactState;
