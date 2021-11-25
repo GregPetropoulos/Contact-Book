@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
-import uuid from 'uuid';
+// import uuid from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import ContactContext from './contactContext';
 import contactReducer from './contactReducer';
 
@@ -27,7 +28,7 @@ const ContactState = (props) => {
         birthday: '12/12/2000'
       },
       {
-        id: 1,
+        id: 2,
         name: 'Sara Watson',
         email: 'swatson@gmail.com',
         phone: '222-222-2222',
@@ -51,27 +52,31 @@ const ContactState = (props) => {
   // * pulling out the state dispatch from reducer, state allows to  access anything in the state and dispatch allows to send objects to contactReducer
   const [state, dispatch] = useReducer(contactReducer, initialState);
 
+  //* Add Contact
+  const addContact = (contact) => {
+    //* When contact submitted in form with useContext assign this uuid to it
+    contact.id = uuidv4();
+    //*dispatch will send the action.type, payload data
+    dispatch({ type: ADD_CONTACT, payload: contact });
+  };
 
-//* Add Contact
+  //* Delete Contact
 
-//* Delete Contact
+  //* Set Current Contact
 
-//* Set Current Contact
+  //* Clear Current Contact
 
-//* Clear Current Contact
+  //* Update Contact
 
-//* Update Contact
+  //* Filter Contact
 
-//* Filter Contact
+  //* Clear Filter
 
-//* Clear Filter
-
-
-return (
-//* Wrapping whole application with the provider
-<ContactContext.Provider value={{ contacts: state.contacts }}>
-    {props.children}
-  </ContactContext.Provider>
-);
+  return (
+    //* Wrapping whole application with the provider
+    <ContactContext.Provider value={{ contacts: state.contacts, addContact }}>
+      {props.children}
+    </ContactContext.Provider>
+  );
 };
 export default ContactState;
