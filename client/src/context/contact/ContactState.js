@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 // import uuid from 'uuid';
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 import ContactContext from './contactContext';
 import contactReducer from './contactReducer';
 
@@ -61,6 +61,10 @@ const ContactState = (props) => {
   };
 
   //* Delete Contact
+  const deleteContact = (id) => {
+    //*dispatch will send the action.type, payload data
+    dispatch({ type: DELETE_CONTACT, payload: id });
+  };
 
   //* Set Current Contact
 
@@ -74,7 +78,8 @@ const ContactState = (props) => {
 
   return (
     //* Wrapping whole application with the provider
-    <ContactContext.Provider value={{ contacts: state.contacts, addContact }}>
+    <ContactContext.Provider
+      value={{ contacts: state.contacts, addContact, deleteContact }}>
       {props.children}
     </ContactContext.Provider>
   );
