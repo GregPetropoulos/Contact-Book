@@ -27,6 +27,18 @@ export default (state, action) => {
           (contact) => contact.id !== action.payload
         )
       };
+    case SET_CURRENT:
+      return {
+        ...state,
+        //* return the entire contact object from the payload which is the current object
+        current: action.payload
+      };
+    case CLEAR_CURRENT:
+      return {
+        ...state,
+        //* return current back to null 
+        current: null
+      };
     default:
       return state;
   }

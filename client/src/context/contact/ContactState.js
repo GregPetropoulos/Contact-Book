@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react';
-// import uuid from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
 import ContactContext from './contactContext';
 import contactReducer from './contactReducer';
@@ -47,7 +46,9 @@ const ContactState = (props) => {
         notes: 'likes to fence',
         birthday: '4/4/1964'
       }
-    ]
+    ],
+    //* When edit gets clicked it gets put into current object
+    current: null
   };
   // * pulling out the state dispatch from reducer, state allows to  access anything in the state and dispatch allows to send objects to contactReducer
   const [state, dispatch] = useReducer(contactReducer, initialState);
@@ -67,8 +68,16 @@ const ContactState = (props) => {
   };
 
   //* Set Current Contact
+  const setCurrent = (contact) => {
+    //*dispatch will send the action.type, payload data
+    dispatch({ type: SET_CURRENT, payload: contact });
+  };
 
   //* Clear Current Contact
+  const clearCurrent = (contact) => {
+    //*dispatch will send the action.type, payload data
+    dispatch({ type: CLEAR_CURRENT });
+  };
 
   //* Update Contact
 
@@ -79,7 +88,14 @@ const ContactState = (props) => {
   return (
     //* Wrapping whole application with the provider
     <ContactContext.Provider
-      value={{ contacts: state.contacts, addContact, deleteContact }}>
+      value={{
+        contacts: state.contacts,
+        current: state.current,
+        addContact,
+        deleteContact,
+        setCurrent,
+        clearCurrent
+      }}>
       {props.children}
     </ContactContext.Provider>
   );
