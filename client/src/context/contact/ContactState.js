@@ -48,7 +48,9 @@ const ContactState = (props) => {
       }
     ],
     //* When edit gets clicked it gets put into current object
-    current: null
+    current: null,
+    //* An array of filtered contacts
+    filtered: null
   };
   // * pulling out the state dispatch from reducer, state allows to  access anything in the state and dispatch allows to send objects to contactReducer
   const [state, dispatch] = useReducer(contactReducer, initialState);
@@ -86,8 +88,16 @@ const ContactState = (props) => {
   };
 
   //* Filter Contact
+  const filterContacts = text => {
+    //* Display will send the action.type, payload data is the text entered by the user for the search of contacts
+    dispatch({ type: FILTER_CONTACTS, payload: text });
+  }
 
   //* Clear Filter
+  const clearFilter = () => {
+    //*dispatch will send the action.type, payload data, an object current null
+    dispatch({ type: CLEAR_FILTER });
+  };
 
   return (
     //* Wrapping whole application with the provider
@@ -95,11 +105,14 @@ const ContactState = (props) => {
       value={{
         contacts: state.contacts,
         current: state.current,
+        filtered:state.filtered,
         addContact,
         deleteContact,
         setCurrent,
         clearCurrent,
-        updateContact
+        updateContact,
+        filterContacts,
+        clearFilter
       }}>
       {props.children}
     </ContactContext.Provider>

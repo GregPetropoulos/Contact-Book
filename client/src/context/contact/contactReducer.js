@@ -19,11 +19,13 @@ export default (state, action) => {
         //* Must use spread operator to make a copy of the state(state is immutable), also send the data from the payload to update copied state in UI
         contacts: [...state.contacts, action.payload]
       };
-      case UPDATE_CONTACT:
-        return {
-          ...state, 
-          contacts:state.contacts.map(contact => contact.id === action.payload.id? action.payload:contact)
-        }
+    case UPDATE_CONTACT:
+      return {
+        ...state,
+        contacts: state.contacts.map((contact) =>
+          contact.id === action.payload.id ? action.payload : contact
+        )
+      };
     case DELETE_CONTACT:
       return {
         ...state,
@@ -41,9 +43,25 @@ export default (state, action) => {
     case CLEAR_CURRENT:
       return {
         ...state,
-        //* return current back to null and clears the form 
+        //* return current back to null and clears the form
         current: null
       };
+    case FILTER_CONTACTS:
+      return {
+        ...state,
+        //* Take filtered part of state set to initial contacts and run filter method on it
+        filtered: state.contacts.filter(contact => {
+          //* regex a the text match of the payload, gi means global case insensitive(any case)
+         const regex = new RegExp(`${action.payload}`, 'gi');
+         return contact.name.match(regex) || contact.email.match(regex)
+        })
+      };
+      case CLEAR_FILTER:
+        return {
+          ...state,
+          //* return filtered back to null and clears the form
+          filtered: null
+        };
     default:
       return state;
   }

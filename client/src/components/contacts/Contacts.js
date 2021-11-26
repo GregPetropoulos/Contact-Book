@@ -7,12 +7,21 @@ const Contacts = () => {
   const contactContext = useContext(ContactContext);
 
   //* Access to contacts and de-structured
-  const { contacts } = contactContext;
+  const { contacts, filtered } = contactContext;
+
+  if (contacts.length === 0) {
+    return <h4>Please Add a contact</h4>;
+  }
   return (
     <Fragment>
-      {contacts.map((contact) => (
-        <ContactItem contact={contact} key={contact.id} />
-      ))}
+      {/* If there is something in filtered, map thru it and show the contactItem, otherwise if the filter is clear show all the contacts*/}
+      {filtered !== null
+        ? filtered.map((contact) => (
+            <ContactItem contact={contact} key={contact.id} />
+          ))
+        : contacts.map((contact) => (
+            <ContactItem contact={contact} key={contact.id} />
+          ))}
     </Fragment>
   );
 };
