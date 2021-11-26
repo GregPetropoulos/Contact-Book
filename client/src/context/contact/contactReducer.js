@@ -19,6 +19,11 @@ export default (state, action) => {
         //* Must use spread operator to make a copy of the state(state is immutable), also send the data from the payload to update copied state in UI
         contacts: [...state.contacts, action.payload]
       };
+      case UPDATE_CONTACT:
+        return {
+          ...state, 
+          contacts:state.contacts.map(contact => contact.id === action.payload.id? action.payload:contact)
+        }
     case DELETE_CONTACT:
       return {
         ...state,
@@ -36,7 +41,7 @@ export default (state, action) => {
     case CLEAR_CURRENT:
       return {
         ...state,
-        //* return current back to null 
+        //* return current back to null and clears the form 
         current: null
       };
     default:
