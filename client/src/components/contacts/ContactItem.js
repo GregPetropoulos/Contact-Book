@@ -14,7 +14,7 @@ const ContactItem = ({ contact }) => {
   };
 
   const { id, name, email, phone, type, notes, website, birthday } = contact;
-
+  
   return (
     <div className='card bg-light'>
       <h3 className='text primary text-left'>
@@ -40,8 +40,8 @@ const ContactItem = ({ contact }) => {
           </li>
         )}
         {website && (
-          <li >
-            <i className='fas fa-globe' />{' '}<a href={website}>{website}</a>
+          <li>
+            <i className='fas fa-globe' /> <a href={website}>{website}</a>
           </li>
         )}
         {notes && (
@@ -56,7 +56,11 @@ const ContactItem = ({ contact }) => {
         )}
       </ul>
       <p>
-        <button className='btn btn-dark btn-sm' onClick ={() =>setCurrent(contact)}>Edit</button>
+        <button
+          className='btn btn-dark btn-sm'
+          onClick={() => setCurrent(contact)}>
+          Edit
+        </button>
         <button className='btn btn-danger btn-sm' onClick={onDelete}>
           Delete
         </button>

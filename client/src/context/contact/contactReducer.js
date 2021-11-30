@@ -32,7 +32,10 @@ export default (state, action) => {
         contacts: state.contacts.filter(
           //* Return all id that do not match the action payload (the id of the delete button clicked on in the ui)
           (contact) => contact.id !== action.payload
-        )
+        ),
+        //* When filtering and clicking delete removes the contact from ui
+        filtered:
+        state.filtered !== null? state.filtered.filter((contact) => contact.id !== action.payload): null,
       };
     case SET_CURRENT:
       return {
