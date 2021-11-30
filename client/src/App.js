@@ -5,6 +5,8 @@ import Home from './components/pages/Home';
 import About from './components/pages/About';
 import ContactState from './context/contact/ContactState';
 import AuthState from './context/auth/AuthState';
+import Register from './components/auth/Register';
+import Login from './components/auth/Login';
 
 import './App.css';
 
@@ -19,6 +21,8 @@ const App = () => {
               <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/about' element={<About />} />
+                <Route path='/register' element={<Register />} />
+                <Route path='/login' element={<Login />} />
               </Routes>
             </div>
           </Fragment>
