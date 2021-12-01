@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
-//* Component level state for registering a user
+//* Brought in the Alerts
+import AlertContext from '../../context/alert/alertContext';
+
 const Register = () => {
+  const alertContext = useContext(AlertContext);
+
+  const { setAlert } = alertContext;
+
+  //* Component level state for registering a user
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -16,7 +23,16 @@ const Register = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log('Regster submit');
+    
+    //* The required prop in the input tag is also handling the ui on the alerts, use both or either
+
+    if (name === '' || email === '' || password === '') {
+      setAlert('Please enter all fields', 'danger');
+    } else if (password !== password2) {
+      setAlert('Passwords do not match', 'danger');
+    } else {
+      console.log('Register submit');
+    }
   };
 
   return (
@@ -31,6 +47,7 @@ const Register = () => {
             type='text'
             name='name'
             value={name}
+            required
             onChange={onChange}></input>
         </div>
         <div className='form-group'>
@@ -39,6 +56,7 @@ const Register = () => {
             type='email'
             name='email'
             value={email}
+            required
             onChange={onChange}></input>
         </div>
         <div className='form-group'>
@@ -47,6 +65,8 @@ const Register = () => {
             type='password'
             name='password'
             value={password}
+            required
+            minLength='6'
             onChange={onChange}></input>
         </div>
         <div className='form-group'>
@@ -55,6 +75,8 @@ const Register = () => {
             type='password'
             name='password2'
             value={password2}
+            required
+            minLength='6'
             onChange={onChange}></input>
         </div>
         <input
