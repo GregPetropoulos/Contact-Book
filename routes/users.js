@@ -40,10 +40,11 @@ router.post(
       let user = await User.findOne({ email });
 
       if (user) {
+        //* Also used in AuthState in payload on frontend
         return res.status(400).json({ msg: 'User already exists' });
       }
 
-      //* new up a user from info coming from req.body ln 26
+      //* new up a user from info coming from req.body ln 36
       user = new User({
         name,
         email,
@@ -70,6 +71,7 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
+          //* Token sent as res.data on front end to AuthState.js
           res.json({ token });
         }
       );

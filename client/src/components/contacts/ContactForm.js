@@ -60,6 +60,7 @@ const ContactForm = () => {
   const clearAll = () => {
     clearCurrent();
   };
+ 
   return (
     <form onSubmit={onSubmit}>
       <h2 className='text-primary'>
@@ -84,7 +85,7 @@ const ContactForm = () => {
           type='tel'
           placeholder='Phone'
           name='phone'
-          pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}'
+          pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}' 
           value={phone}
           onChange={onChange}
         />

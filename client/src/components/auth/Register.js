@@ -1,12 +1,27 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 //* Brought in the Alerts
 import AlertContext from '../../context/alert/alertContext';
 
+//* Brought in AuthContext for handling the token
+import AuthContext from '../../context/auth/authContext';
+
 const Register = () => {
   const alertContext = useContext(AlertContext);
+  const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
+
+  const { register, error, clearErrors } = authContext;
+
+  //* Anytime an error changes run it 
+  useEffect(() => {
+    if (error === 'User already exists') {
+      setAlert(error, 'danger')
+      //* clear errors will run after useEffect fires off, hits the AuthState, then gets dispatched to the reducer and executed here. 
+      clearErrors();
+    }
+  },[error]);
 
   //* Component level state for registering a user
   const [user, setUser] = useState({
@@ -23,7 +38,7 @@ const Register = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    
+
     //* The required prop in the input tag is also handling the ui on the alerts, use both or either
 
     if (name === '' || email === '' || password === '') {
@@ -31,7 +46,12 @@ const Register = () => {
     } else if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      console.log('Register submit');
+      //* From authContext>AuthState register takes in the formData
+      register({
+        name,
+        email,
+        password
+      });
     }
   };
 
