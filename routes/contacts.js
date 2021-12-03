@@ -9,7 +9,7 @@ const Contact = require('../models/Contact');
 
 //* route    GET api/contacts
 //* @desc     Get all users contacts
-//* @access   Private
+//! @access   Private
 router.get('/', auth, async (req, res) => {
   try {
     // * Look into Contact db and locate the user field with object id that matches from the auth middleware request id
@@ -25,7 +25,7 @@ router.get('/', auth, async (req, res) => {
 
 //* @route    POST api/contacts
 //* @desc     Add new contacts
-//* @access   Private
+//! @access   Private
 router.post(
   '/',
   [auth, [check('name', 'Name is required').not().isEmpty()]],
@@ -57,7 +57,7 @@ router.post(
 
 //* @route    PUT api/contacts/:id
 //* @desc     Update a contact
-//* @access   Private
+//! @access   Private
 router.put('/:id', auth, async (req, res) => {
   const { name, email, phone, notes, website, birthday, type } = req.body;
 
@@ -101,7 +101,7 @@ router.put('/:id', auth, async (req, res) => {
 
 //* @route    DELETE api/contacts/:id
 //* @desc     Delete a contact
-//* @access   Private
+//! @access   Private
 router.delete('/:id', auth, async (req, res) => {
   try {
     //* id of contact in db matches the params in route

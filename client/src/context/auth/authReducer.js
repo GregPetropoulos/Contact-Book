@@ -11,36 +11,45 @@ import {
 
 /* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
 
-export default (state, action) => {
+const authReducer = (state, action) => {
   switch (action.type) {
+    case USER_LOADED:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        user: action.payload
+      };
     case REGISTER_SUCCESS:
-      //* Storing the actual token response into local storage
-      localStorage.setItem('token', action.payload.token);
-//* take and spread the current state with token (action.payload)
+    case LOGIN_SUCCESS:
+      //* take and spread the current state with token (action.payload)
       return {
         ...state,
         ...action.payload,
         isAuthenticated: true,
         loading: false
       };
-case REGISTER_FAIL:
-    //* Re-set the state, remove the token from localstorage 
-    localStorage.removeItem('token');
-    return{
+    case REGISTER_FAIL:
+    case AUTH_ERROR:
+    case LOGIN_FAIL:
+    case LOGOUT:
+    
+      return {
         ...state,
-        token:null,
-        isAuthenticated:false,
-        loading:false,
-        user:null,
+        token: null,
+        isAuthenticated: false,
+        loading: false,
+        user: null,
         //* The new payload is error, see AuthState and routes/users.js
         error: action.payload
-    }
+      };
     case CLEAR_ERRORS:
-        return {
-            ...state,
-            error:null
-        };
+      return {
+        ...state,
+        error: null
+      };
     default:
-      return state;
+      throw new Error(`Unsupported type of: ${action.type}`);
   }
 };
+export default authReducer;

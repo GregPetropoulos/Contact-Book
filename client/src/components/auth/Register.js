@@ -1,27 +1,31 @@
 import React, { useState, useContext, useEffect } from 'react';
 
+//* In react-router-dom v6 history is not used anymore.
+
+import { Navigate } from 'react-router-dom';
+
 //* Brought in the Alerts
 import AlertContext from '../../context/alert/alertContext';
 
 //* Brought in AuthContext for handling the token
-import AuthContext from '../../context/auth/authContext';
+import { useAuth, clearErrors, register } from '../../context/auth/AuthState'
 
-const Register = () => {
+const Register = (props) => {
   const alertContext = useContext(AlertContext);
-  const authContext = useContext(AuthContext);
+  const [authState, authDispatch] = useAuth();
+  const { error, isAuthenticated } = authState;
 
   const { setAlert } = alertContext;
 
-  const { register, error, clearErrors } = authContext;
-
-  //* Anytime an error changes run it 
+  //* Anytime an error changes run it
   useEffect(() => {
     if (error === 'User already exists') {
-      setAlert(error, 'danger')
-      //* clear errors will run after useEffect fires off, hits the AuthState, then gets dispatched to the reducer and executed here. 
-      clearErrors();
+      setAlert(error, 'danger');
+      //* clear errors will run after useEffect fires off, hits the AuthState, then gets dispatched to the reducer and executed here.
+      clearErrors(authDispatch);
     }
-  },[error]);
+    // eslint-disable-next-line
+  }, [error, isAuthenticated, props.history, setAlert, authDispatch]);
 
   //* Component level state for registering a user
   const [user, setUser] = useState({
@@ -47,13 +51,16 @@ const Register = () => {
       setAlert('Passwords do not match', 'danger');
     } else {
       //* From authContext>AuthState register takes in the formData
-      register({
+      register(authDispatch, {
         name,
         email,
         password
       });
     }
   };
+
+  //* Redirect loaded user to home page
+  if (isAuthenticated) return <Navigate to='/' />;
 
   return (
     <div className='from-container'>
