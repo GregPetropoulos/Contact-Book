@@ -1,7 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import AlertContext from '../../context/alert/alertContext'
+import {useAuth, clearErrors, login} from '../../context/auth/AuthState'
 
 //* Component level state for registering a user
 const Login = () => {
+  const alertContext = useContext(AlertContext);
+  const {setAlert} =alertContext;
+
+  //* Utilizing the custom hook and set state to error and isAuthenticated
+  const [AuthState, authDispatch]= useAuth();
+  const{error, isAuthenticated}=AuthState
+
+  useEffect(()=> {
+    //* see routes/auth to check backend error msg
+    if(error === 'Invalid Credentials'){
+      setAlert(error,'danger'); 
+    clearErrors(authDispatch);
+    }
+  }, [error, isAuthenticated, authDispatch, setAlert])
+  
   const [user, setUser] = useState({
     email: '',
     password: ''
@@ -14,8 +32,17 @@ const Login = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log('login submit');
+if(email ==='' || password === ''){
+  setAlert('Please fill in all fields', 'danger')
+}else{
+  //* redirects authenticated user to home page
+  login(authDispatch, {
+    email,
+    password
+  })
+}
   };
+if(isAuthenticated) return<Navigate to='/' />;
 
   return (
     <div className='from-container'>

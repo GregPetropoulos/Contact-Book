@@ -1,20 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import ContactContext from '../../context/contact/contactContext';
+import {useContacts, deleteContact, setCurrent, clearCurrent } from '../../context/contact/ContactState';
 
 const ContactItem = ({ contact }) => {
-  //* Bring in useContext for the global state
-  const contactContext = useContext(ContactContext);
-  //* Bring in the delete method from contactContext
-  const { deleteContact, setCurrent, clearCurrent } = contactContext;
+  //* we just need the contact dispatch without state.
+  const contactDispatch = useContacts()[1];
+
+  const { _id, name, email, phone, type, notes, website, birthday } = contact;
 
   const onDelete = () => {
-    deleteContact(id);
-    clearCurrent();
+    deleteContact(contactDispatch, _id);
+    clearCurrent(contactDispatch);
   };
 
-  const { id, name, email, phone, type, notes, website, birthday } = contact;
-  
+
+
   return (
     <div className='card bg-light'>
       <h3 className='text primary text-left'>
@@ -58,7 +58,7 @@ const ContactItem = ({ contact }) => {
       <p>
         <button
           className='btn btn-dark btn-sm'
-          onClick={() => setCurrent(contact)}>
+          onClick={() => setCurrent(contactDispatch, contact)}>
           Edit
         </button>
         <button className='btn btn-danger btn-sm' onClick={onDelete}>

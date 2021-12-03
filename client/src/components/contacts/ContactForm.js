@@ -1,14 +1,29 @@
-  import React, { useState, useContext, useEffect } from 'react';
+  import React, { useState, useEffect } from 'react';
 //* Component level state for the form useState
+import  {
+  addContact, 
+  useContacts,
+  updateContact, 
+  clearCurrent
+ } from '../../context/contact/ContactState';
 
-//* To gain access to Add Contacts will need to useContext Global
-import ContactContext from '../../context/contact/contactContext';
+ const initialContact ={
+  name: '',
+  email: '',
+  phone: '',
+  type: 'personal',
+  notes: '',
+  website: '',
+  birthday: ''
+ }
+
+
 const ContactForm = () => {
-  //*Global state
-  const contactContext = useContext(ContactContext);
+const [contactState, contactDispatch] =useContacts();
+const {current}= contactState;
+//* Set up hook initial values for component level form state
+const [contact, setContact] =useState(initialContact);
 
-  //* de-structure from context to access global state functions and current object
-  const { addContact, current, updateContact, clearCurrent } = contactContext;
 
   //* EDIT A CURRENT USER AND FILL THE FORM WITH THEIR DATA
   //* Lifecycle method to fill form on load, when click edit a contact fill form with current contact
@@ -16,28 +31,11 @@ const ContactForm = () => {
     if (current !== null) {
       setContact(current);
     } else {
-      setContact({
-        name: '',
-        email: '',
-        phone: '',
-        type: 'personal',
-        notes: '',
-        website: '',
-        birthday: ''
-      });
+      setContact(initialContact);
     }
-  }, [contactContext, current]);
+  }, [current]);
 
-  //* Set up hook initial values for component level form state
-  const [contact, setContact] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    type: 'personal',
-    notes: '',
-    website: '',
-    birthday: ''
-  });
+  
   //* de-structure contact to use in the form below
   const { name, email, phone, type, notes, website, birthday } = contact;
 
@@ -48,17 +46,17 @@ const ContactForm = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (current === null) {
-      addContact(contact);
+      addContact(contactDispatch, contact).then(()=> setContact(initialContact));
     } else {
       //* This functions is taking in the local useState changes (contact) to the from and updating the Context(global) state
-      updateContact(contact);
+      updateContact(contactDispatch, contact);
     }
     //* clear form
     clearAll();
   };
 
   const clearAll = () => {
-    clearCurrent();
+    clearCurrent(contactDispatch);
   };
  
   return (
