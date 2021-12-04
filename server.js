@@ -13,11 +13,8 @@ const app = express();
 connectDB();
 
 //*MIDDLEWARE
-//  ! replaced body parser
+//  replaced body parser
 app.use(express.json({ extended: false }));
-
-// app.use(responseTime);
-//const responseTime = require('./middleware/responseTime');
 
 //*DEFINED ROUTES, CALLS ROUTE FOLDER
 app.use('/api/users', require('./routes/users'));
