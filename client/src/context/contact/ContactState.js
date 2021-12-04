@@ -25,7 +25,7 @@ export const useContacts = () => {
 
 // Action creators
 // NOTE: These could be moved to a separate file like in redux but they remain here for ease of students transitioning
-//*GET CONTACTS
+//*GET CONTACTS-getting all of the users contacts
 export const getContacts = async (dispatch) => {
   try {
     const res = await axios.get('/api/contacts');
@@ -124,6 +124,8 @@ const ContactState = (props) => {
     filtered: null,
     error: null
   };
+  
+  //*These values are getting updated by the useContacts custom hook in any component they are placed in  
   // * pulling out the state dispatch from reducer, state allows to  access anything in the state and dispatch allows to send objects to contactReducer
   const [state, dispatch] = useReducer(contactReducer, initialState);
 

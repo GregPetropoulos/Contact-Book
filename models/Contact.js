@@ -27,7 +27,17 @@ const ContactSchema = mongoose.Schema({
     type: String
   },
   birthday: {
-    type: Date,
+    // type: Date,
+    // trim: true,
+    day: {
+      type: Number
+    },
+    month: {
+      type: Number
+    },
+    year: {
+      type: Number
+    }
   },
   date: {
     type: Date,

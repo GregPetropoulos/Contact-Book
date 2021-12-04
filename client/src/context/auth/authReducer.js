@@ -33,7 +33,6 @@ const authReducer = (state, action) => {
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT:
-    
       return {
         ...state,
         token: null,
